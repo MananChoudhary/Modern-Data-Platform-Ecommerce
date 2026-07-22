@@ -1,174 +1,179 @@
-# E-Commerce Data Engineering Platform
+# Azure Data Engineering End-to-End Project
 
 ## Overview
 
-This project demonstrates a production-style Azure Databricks data engineering pipeline using a Medallion Architecture.
+This project demonstrates an end-to-end Azure Data Engineering pipeline following a modern Medallion Architecture (Bronze → Silver → Gold). The objective is to simulate a production-grade data platform while progressively incorporating advanced Azure and Databricks capabilities.
 
-The pipeline ingests transactional data from Azure SQL Database, processes it through Bronze, Silver, and Gold Delta Lake layers, and prepares analytical datasets.
+---
+
+## Tech Stack
+
+* Azure SQL Database
+* Azure Data Factory
+* Azure Data Lake Storage Gen2
+* Azure Databricks
+* Apache Spark
+* Delta Lake
+* Unity Catalog
+* Databricks Workflows
+
+**Upcoming Enhancements**
+
+* Auto Loader
+* Structured Streaming
+* Apache Kafka
+* Spark Declarative Pipelines
+* Delta Live Tables (optional)
+* Power BI
+* CI/CD
+
+---
 
 ## Architecture
 
+Azure SQL
+
+↓
+
+Azure Data Factory
+
+↓
+
+ADLS Gen2 (Bronze)
+
+↓
+
+Databricks Bronze
+
+↓
+
+Silver Layer
+
+↓
+
+Gold Layer (Star Schema)
+
+↓
+
+Power BI
+
+---
+
+## Project Structure
+
+```text
+bronze/
+customers
+products
+orders
+order_items
+payments
+inventory
+shipments
+
+silver/
+customers
+products
+orders
+order_items
+payments
+inventory
+shipments
+
+gold/
+dim_customer
+dim_product
+fact_orders
+fact_order_items
+fact_payments
+fact_inventory
+fact_shipments
 ```
-Azure SQL Database
-        |
-        | JDBC ingestion
-        ↓
-Bronze Delta Lake
-        |
-        | Cleaning and standardization
-        ↓
-Silver Delta Lake
-        |
-        | Dimensional modeling
-        ↓
-Gold Delta Lake
-        |
-        | Analytics-ready datasets
-```
 
-## Technology Stack
+---
 
-* Azure Data Lake Storage Gen2
-* Azure Databricks
-* Unity Catalog
-* Delta Lake
-* Apache Spark / PySpark
-* Azure SQL Database
-* JDBC
-* Azure Key Vault
-* SQL
-
-## Data Layers
+## Current Progress
 
 ### Bronze Layer
 
-Purpose:
-
-* Store raw ingested data
-* Maintain source fidelity
-* Provide data lineage
-
-Features:
-
-* JDBC ingestion from Azure SQL
-* Delta tables
-* Audit metadata
-
-Metadata columns:
-
-```
-_load_timestamp
-_source_system
-```
-
-Example:
-
-```
-de_learning_workspace.bronze.customers
-```
-
----
+* Raw ingestion completed.
+* Delta tables created.
+* No transformations applied.
 
 ### Silver Layer
 
-Purpose:
+Completed for all datasets.
 
-* Clean and standardize data
-* Remove duplicates
-* Apply data quality rules
-
-Transformations:
+Implemented:
 
 * Duplicate removal
-* Email standardization
-* Null handling
 * Data cleansing
-
-Additional audit metadata:
-
-```
-_silver_processed_timestamp
-```
-
-Example:
-
-```
-de_learning_workspace.silver.customers
-```
-
----
+* String standardization
+* Business-safe NULL handling
+* Metadata enrichment
 
 ### Gold Layer
 
-Purpose:
-
-* Business-ready analytical datasets
-* Dimensional modeling
-* Historical tracking
-
-Planned features:
-
-* Slowly Changing Dimensions Type 2
-* Surrogate keys
-* Fact tables
-* Business metrics
-
-Example:
-
-```
-gold.dim_customer
-gold.fact_orders
-```
-
----
-
-## Current Pipeline Progress
-
 Completed:
 
-* Azure infrastructure setup
-* Unity Catalog configuration
-* Azure SQL source creation
-* JDBC connectivity
-* Secret management
-* Bronze ingestion pipeline
-* Silver transformation pipeline
+* dim_customer (SCD Type 2)
+* dim_product (SCD Type 2)
 
 In Progress:
 
-* Gold dimension modeling
-* SCD Type 2 implementation
-* Fact table creation
-* Incremental loading framework
+* fact_orders
+* fact_order_items
+* fact_payments
+* fact_inventory
+* fact_shipments
 
-## SCD Type 2 Design
+---
 
-Customer history is maintained by:
+## Data Warehouse Design
 
-1. Expiring previous active records
+### Dimensions
 
-```
-is_current = false
-effective_end_date = current_timestamp()
-```
+* dim_customer (SCD Type 2)
+* dim_product (SCD Type 2)
 
-2. Inserting a new active version
+### Facts
 
-```
-is_current = true
-effective_end_date = 9999-12-31
-```
+* fact_orders
+* fact_order_items
+* fact_payments
+* fact_inventory
+* fact_shipments
 
-This preserves historical customer changes.
+---
 
-## Project Goal
+## Concepts Implemented
 
-Build an end-to-end Azure Data Engineering project demonstrating:
+* Medallion Architecture
+* Star Schema
+* Slowly Changing Dimension Type 2
+* Business Keys
+* Surrogate Keys
+* Incremental Loading
+* Idempotent ETL
+* Delta Lake
 
-* Data ingestion
-* Delta Lake architecture
-* Spark transformations
-* Dimensional modeling
-* Incremental processing
-* SCD Type 2 handling
-* Production-style pipeline design
+---
+
+## Planned Enhancements
+
+* Databricks Workflows
+* Auto Loader
+* Structured Streaming
+* Kafka Integration
+* Spark Declarative Pipelines
+* Delta Optimization
+* Monitoring & Alerting
+* Performance Tuning
+* CI/CD
+* Infrastructure as Code
+
+---
+
+## Project Objective
+
+The goal of this project is to build a production-inspired Azure Data Engineering solution while learning the reasoning behind warehouse design, Spark transformations, and scalable ETL pipelines.
